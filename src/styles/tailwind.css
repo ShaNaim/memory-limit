@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   Theme Variables
+   ---------------------------------------------------------
+   Dark is the default (:root).
+   Switch to light by adding `data-theme="light"` attribute
+   on <html> or any parent element, or the `.theme-light` class.
+   ========================================================= */
+
+:root {
+  color-scheme: dark;
+  --color-base-100: oklch(27% 0.041 260.031);
+  --color-base-200: oklch(52% 0.105 223.128);
+  --color-base-300: oklch(44% 0.043 257.281);
+  --color-base-content: oklch(100% 0 0);
+  --color-primary: oklch(50% 0.134 242.749);
+  --color-primary-content: oklch(96% 0.018 272.314);
+  --color-sub-content: oklch(70% 0.022 261.325);
+  --color-secondary: oklch(52% 0.223 3.958);
+  --color-secondary-content: oklch(94% 0.028 342.258);
+  --color-accent: oklch(96% 0.007 247.896);
+  --color-accent-content: oklch(38% 0.063 188.416);
+  --color-neutral: oklch(27% 0.033 256.848);
+  --color-neutral-content: oklch(92% 0.004 286.32);
+  --color-info: oklch(74% 0.16 232.661);
+  --color-info-content: oklch(29% 0.066 243.157);
+  --color-success: oklch(76% 0.177 163.223);
+  --color-success-content: oklch(37% 0.077 168.94);
+  --color-warning: oklch(82% 0.189 84.429);
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: oklch(71% 0.194 13.428);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+[data-theme='light'],
+.theme-light {
+  color-scheme: light;
+  --color-base-100: oklch(98% 0.002 247.839);
+  --color-base-200: oklch(87% 0.01 258.338);
+  --color-base-300: oklch(70% 0.04 256.788);
+  --color-base-content: oklch(21% 0.034 264.665);
+  --color-primary: oklch(37% 0.013 285.805);
+  --color-primary-content: oklch(98% 0 0);
+  --color-secondary: oklch(0% 0 0);
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: oklch(54% 0.245 262.881);
+  --color-accent-content: oklch(97% 0.014 254.604);
+  --color-neutral: oklch(44% 0.03 256.802);
+  --color-neutral-content: oklch(98% 0.002 247.839);
+  --color-info: oklch(52% 0.105 223.128);
+  --color-info-content: oklch(98% 0.019 200.873);
+  --color-success: oklch(59% 0.145 163.225);
+  --color-success-content: oklch(97% 0.021 166.113);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(57% 0.245 27.325);
+  --color-error-content: oklch(97% 0.013 17.38);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 1;
+}
+
+/* Automatically honor user's preference if no explicit data-theme is set */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --color-base-100: oklch(98% 0.002 247.839);
+    --color-base-200: oklch(87% 0.01 258.338);
+    --color-base-300: oklch(70% 0.04 256.788);
+    --color-base-content: oklch(21% 0.034 264.665);
+    --color-primary: oklch(37% 0.013 285.805);
+    --color-primary-content: oklch(98% 0 0);
+    --color-secondary: oklch(0% 0 0);
+    --color-secondary-content: oklch(100% 0 0);
+    --color-accent: oklch(54% 0.245 262.881);
+    --color-accent-content: oklch(97% 0.014 254.604);
+    --color-neutral: oklch(44% 0.03 256.802);
+    --color-neutral-content: oklch(98% 0.002 247.839);
+    --color-info: oklch(52% 0.105 223.128);
+    --color-info-content: oklch(98% 0.019 200.873);
+    --color-success: oklch(59% 0.145 163.225);
+    --color-success-content: oklch(97% 0.021 166.113);
+    --color-warning: oklch(66% 0.179 58.318);
+    --color-warning-content: oklch(98% 0.022 95.277);
+    --color-error: oklch(57% 0.245 27.325);
+    --color-error-content: oklch(97% 0.013 17.38);
+    --radius-selector: 0.5rem;
+    --radius-field: 0.5rem;
+    --radius-box: 0.5rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+    --depth: 1;
+    --noise: 1;
+  }
+}
+
+/* -----------
+   Components
+   ----------- */
+@layer components {
+  /* Frosted glass card */
+  .glass-card {
+    @apply bg-gray-800/30 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-xl;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  }
+}
+
+@layer utilities {
+  .border-base-g {
+    @apply h-px bg-gradient-to-l from-transparent to-success;
+  }
+}
+
+/* -----------
+   Animations
+   ----------- */
+
+/* List items fade/slide */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* Generic slide-fade */
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}

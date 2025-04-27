@@ -42,6 +42,7 @@
                 v-if="showProfile"
                 class="absolute end-0 z-10 mt-0.5 w-56 rounded-md border border-gray-100 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900"
                 role="menu"
+                v-click-outside="handleClose"
               >
                 <div class="p-2">
                   <nav class="block md:hidden mb-2">
@@ -128,6 +129,10 @@ function handleLogout() {
   authStore.logout()
   showProfile.value = false
   router.push('/login')
+}
+
+function handleClose() {
+  showProfile.value = false
 }
 </script>
 

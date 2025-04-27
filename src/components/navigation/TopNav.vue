@@ -3,10 +3,12 @@
     <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <div class="flex-1 md:flex md:items-center md:gap-12">
-          <router-link to="/" class="block text-teal-600 dark:text-teal-300" href="#">
+          <router-link to="/" class="block text-teal-600 dark:text-teal-300">
             <div class="inline-flex">
               <BrainIcon widthClass="w-9" heightClass="w-9" class="mr-4" />
-              <h1 class="text-2xl font-medium bg-clip-text text-success">{{ VITE_APP_NAME }}</h1>
+              <h1 class="text-2xl font-medium bg-clip-text text-success">
+                {{ VITE_APP_NAME }}
+              </h1>
             </div>
           </router-link>
         </div>
@@ -18,7 +20,8 @@
                 <router-link
                   to="/about"
                   class="text-gray-500 hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                  >About
+                >
+                  About
                 </router-link>
               </li>
             </ul>
@@ -47,43 +50,54 @@
                         <router-link
                           to="/about"
                           class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                          >About
+                        >
+                          About
                         </router-link>
                       </li>
                     </ul>
                   </nav>
 
-                  <div v-if="login">
+                  <div v-if="isLoggedIn">
                     <router-link
-                      to="/about"
+                      to="/dashboard"
                       class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                      >My profile
+                    >
+                      Dashboard
                     </router-link>
 
                     <router-link
-                      to="/about"
+                      to="/profile"
                       class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                      >History
+                    >
+                      My Profile
                     </router-link>
                   </div>
+
                   <div v-else>
                     <router-link
-                      to="/about"
+                      to="/login"
                       class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-                      >Login
+                    >
+                      Login
+                    </router-link>
+                    <router-link
+                      to="/register"
+                      class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+                    >
+                      Register
                     </router-link>
                   </div>
 
-                  <form method="POST" action="#">
-                    <button
-                      type="submit"
-                      class="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-50 dark:text-red-500 dark:hover:bg-red-600/10"
-                      role="menuitem"
-                    >
-                      <LogoutIcon />
-                      Logout
-                    </button>
-                  </form>
+                  <button
+                    v-if="isLoggedIn"
+                    @click="handleLogout"
+                    type="button"
+                    class="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-50 dark:text-red-500 dark:hover:bg-red-600/10"
+                    role="menuitem"
+                  >
+                    <LogoutIcon />
+                    Logout
+                  </button>
                 </div>
               </div>
             </transition>
@@ -95,11 +109,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth.js'
+import { useRouter } from 'vue-router'
+
 import BrainIcon from '@/assets/icons/brain.vue'
 import LogoutIcon from '@/assets/icons/LogoutIcon.vue'
+
 const { VITE_APP_NAME } = import.meta.env
+const authStore = useAuthStore()
+const router = useRouter()
+
 const showProfile = ref(false)
+
+const isLoggedIn = computed(() => authStore.isLogin)
+
+function handleLogout() {
+  authStore.logout()
+  showProfile.value = false
+  router.push('/login')
+}
 </script>
 
-<style></style>
+<style scoped></style>

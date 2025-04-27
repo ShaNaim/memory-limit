@@ -4,6 +4,8 @@ import Home from '@/pages/Home/index.vue'
 import Game from '@/pages/Game/index.vue'
 import Result from '@/pages/Result/index.vue'
 import NotFound from '@/pages/NotFound/index.vue'
+import Login from '@/pages/Auth/login.vue'
+
 const routes = [
   {
     path: '/',
@@ -24,6 +26,11 @@ const routes = [
     path: '/results/:score',
     name: 'Result',
     component: Result,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
   },
   {
     path: '/:pathMatch(.*)*',

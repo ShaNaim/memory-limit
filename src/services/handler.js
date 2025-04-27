@@ -24,6 +24,7 @@ export function handleAnswersCheck(userValue, numbers) {
   return userValue.every((raw, i) => {
     if (typeof raw !== 'string' || raw.trim() === '') return false
     const parsed = Number(raw)
-    return Number.isFinite(parsed) && parsed === numbers[i] + 1
+    const expected = (numbers[i] + 1) % 10 === 0 ? 0 : numbers[i] + 1
+    return Number.isFinite(parsed) && parsed === expected
   })
 }

@@ -1,74 +1,63 @@
 <template>
-  <Instruction
-    v-if="showInstruction"
-    :instruction="'Add 1 to Each Number'"
-    @start="beginInstruction"
-  />
-
-  <CountDown v-if="showCountdown" :initialDelay="1" :startNumber="3" @finished="startGame" />
-  <div v-else class="flex flex-col gap-10 items-center justify-center p-4">
-    <Numbers :limit="5" :items="numbers" v-if="showNumbers" @timerEnded="showInputs()" />
-
-    <Inputs
-      v-if="showInputsSection && !endGame"
-      :count="numbers.length"
-      @submit="handleCodeEntry"
-    />
-    <Result v-if="endGame" :result="result" />
+  <div>
+    <div class="min-h-screen flex flex-col gap-[20vh] items-center justify-start">
+      <Instruction :instruction="instructionText" @start="goTo('countdown')" />
+      <CountDown
+        v-if="stage === 'countdown'"
+        :initialDelay="1"
+        :startNumber="3"
+        :startSecondPart="startSecondPart"
+        :startText="startText"
+        @finished="beginRound"
+      />
+      <Numbers
+        v-if="stage === 'numbers'"
+        :items="numbers"
+        :limit="3"
+        @timerEnded="() => goTo('inputs')"
+      />
+      <Inputs v-if="stage === 'inputs'" :count="numbers.length" @submit="checkAnswers" />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import Instruction from './Instruction.vue'
-import Inputs from './Inputs.vue'
-import Result from './Result.vue'
 import CountDown from '@/components/templates/countdown/CountDown.vue'
 import Numbers from '@/components/templates/card/Numbers.vue'
-
+import Inputs from './Inputs.vue'
 import { generateRandomNumbers, handleAnswersCheck } from '@/services/handler'
 
-const showInstruction = ref(true)
-const showCountdown = ref(true)
-const showNumbers = ref(false)
-const showInputsSection = ref(false)
+const router = useRouter()
+const currentLevel = ref(4)
+const startSecondPart = ref(false)
+const startText = ref('Round 1')
+const stage = ref('countdown')
 const numbers = ref([])
 
-const result = ref(0)
-const endGame = ref(false)
-function beginInstruction() {
-  showInstruction.value = false
-  showCountdown.value = true
+const instructionText = computed(() => `Add 1 to Each Number`)
+
+function goTo(next) {
+  stage.value = next
 }
 
-function startGame() {
-  showCountdown.value = false
-  numbers.value = generateRandomNumbers(4, 9)
-  showNumbers.value = true
+function beginRound() {
+  numbers.value = generateRandomNumbers(currentLevel.value, 9)
+  stage.value = 'numbers'
 }
 
-function showInputs() {
-  console.log('hello')
-  showNumbers.value = false
-  showInputsSection.value = true
-}
-
-function handleCodeEntry(userValue) {
-  const userResult = handleAnswersCheck(userValue, numbers.value)
-  if (!userResult) {
-    result.value = 0
-    endGame.value = true
+function checkAnswers(userInput) {
+  const correct = handleAnswersCheck(userInput, numbers.value)
+  console.log({ correct })
+  if (correct) {
+    currentLevel.value++
+    startSecondPart.value = true
+    startText.value = `Round ${currentLevel.value - 3}`
+    goTo('countdown')
+  } else {
+    router.push({ name: 'Result', params: { score: currentLevel.value } })
   }
 }
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

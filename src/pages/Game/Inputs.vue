@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <div class="flex space-x-4 gap-16">
+    <div class="flex overflow-x-auto overflow-y-hidden" :style="{ gap: computedGap }">
       <input
         v-for="(val, idx) in values"
         :key="idx"
@@ -12,7 +12,7 @@
         autocomplete="off"
       />
     </div>
-    <div class="">
+    <div>
       <button
         @click="onSubmit()"
         class="mt-4 px-4 bg-secondary text-secondary-content py-2 rounded-md hover:bg-secondary/90 transition"
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, onMounted } from 'vue'
+import { ref, watch, nextTick, onMounted, computed } from 'vue'
 
 const props = defineProps({
   count: { type: Number, required: true },
@@ -32,8 +32,15 @@ const props = defineProps({
 const emit = defineEmits(['submit'])
 
 const values = ref([])
-
 const inputRefs = []
+
+// Compute a dynamic gap that shrinks with more inputs (max 64px down to min 8px)
+const computedGap = computed(() => {
+  const len = props.count
+  const raw = 64 - (len - 1) * 8
+  return `${Math.max(8, raw)}px`
+})
+
 function setInputRef(el, idx) {
   if (el) inputRefs[idx] = el
 }
@@ -43,19 +50,12 @@ watch(
   (n) => {
     values.value = Array(n).fill('')
     inputRefs.length = n
-
-    nextTick(() => {
-      inputRefs[0]?.focus()
-    })
+    nextTick(() => inputRefs[0]?.focus())
   },
   { immediate: true },
 )
 
-onMounted(() => {
-  nextTick(() => {
-    inputRefs[0]?.focus()
-  })
-})
+onMounted(() => nextTick(() => inputRefs[0]?.focus()))
 
 function handleAdvance(idx) {
   if (idx < props.count - 1) {

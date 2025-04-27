@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import About from '@/pages/About/index.vue'
 import Home from '@/pages/Home/index.vue'
 import Game from '@/pages/Game/index.vue'
+import Result from '@/pages/Result/index.vue'
 import NotFound from '@/pages/NotFound/index.vue'
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: '/game',
     name: 'Game',
     component: Game,
+  },
+  {
+    path: '/results/:score',
+    name: 'Result',
+    component: Result,
   },
   {
     path: '/:pathMatch(.*)*',

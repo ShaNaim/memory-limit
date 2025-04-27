@@ -3,13 +3,18 @@
     <button
       v-if="!counting && !inDelay"
       @click="begin()"
-      class="px-6 py-3 bg-primary text-primary-content rounded-md shadow hover:bg-primary/90 transition"
+      class="text-center w-32 group relative inline-block overflow-hidden rounded-sm border border-secondary px-8 py-3 text-sm font-medium text-secondary-content bg-transparent transition-all duration-300 transform hover:scale-110 hover:shadow-xl focus:ring-3 focus:outline-none"
     >
-      Start
+      <div>
+        <span
+          class="absolute inset-y-0 left-0 w-[2px] bg-secondary transition-all duration-500 group-hover:w-full"
+        ></span>
+        <span class="relative transition-colors duration-300 group-hover:text-white"> Start </span>
+      </div>
     </button>
 
     <div v-else-if="inDelay" class="text-6xl font-medium text-secondary-content drop-shadow-lg">
-      Starting…
+      {{ startText }}
     </div>
 
     <transition name="pop">
@@ -24,15 +29,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps({
   initialDelay: { type: Number, default: 3 },
   startNumber: { type: Number, default: 5 },
+  startSecondPart: { type: Boolean, default: true },
+  startText: { type: String, default: 'Round 1' },
 })
 const emit = defineEmits(['finished'])
 
-const inDelay = ref(false)
+const inDelay = ref(props.startSecondPart)
 const counting = ref(false)
 const current = ref(props.startNumber)
 let intervalId = null
@@ -43,7 +50,6 @@ function begin() {
     inDelay.value = false
     counting.value = true
     current.value = props.startNumber
-
     intervalId = setInterval(() => {
       if (current.value <= 0) {
         clearInterval(intervalId)
@@ -55,6 +61,10 @@ function begin() {
     }, 1000)
   }, props.initialDelay * 1000)
 }
+
+onMounted(() => {
+  if (props.startSecondPart) begin()
+})
 </script>
 
 <style scoped>

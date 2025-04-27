@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-start">
-    <div class="flex flex-row gap-8 md:gap-32">
+  <div class="flex justify-start overflow-x-auto overflow-y-hidden">
+    <div class="flex" :style="{ gap: computedGap }">
       <div
         v-for="(item, idx) in items"
         :key="idx"
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 
 const props = defineProps({
   items: {
@@ -24,10 +24,18 @@ const props = defineProps({
   limit: {
     type: Number,
     required: true,
+    default: 5,
   },
 })
 
 const emit = defineEmits(['timerEnded'])
+
+// Compute a dynamic gap that shrinks as the number of items increases
+const computedGap = computed(() => {
+  const len = props.items.length
+  const raw = 32 - (len - 1) * 4
+  return `${Math.max(4, raw)}px`
+})
 
 const timeLeft = ref(props.limit)
 let intervalId = null
@@ -39,16 +47,13 @@ function startTimer() {
       timeLeft.value--
     }
     if (timeLeft.value === 0) {
-      clearInterval(intervalId)
       emit('timerEnded')
+      clearInterval(intervalId)
     }
   }, 1000)
 }
 
-onMounted(() => {
-  startTimer()
-})
-
+onMounted(startTimer)
 onBeforeUnmount(() => {
   if (intervalId) clearInterval(intervalId)
 })

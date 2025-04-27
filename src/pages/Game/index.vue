@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen flex flex-col gap-10 items-center justify-start bg-gradient-to-br from-primary to-base-100 p-8"
+    class="min-h-screen flex flex-col gap-10 items-center justify-center bg-gradient-to-br from-primary to-base-100 p-8"
   >
     <StartUp v-if="!startGame" @clicked="beginGame()" />
     <Game v-else />
